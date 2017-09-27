@@ -36,20 +36,21 @@ def main(args):
     seed = state['seed']
     np.random.seed(seed)
 
-    X = np.array(X)[:100]
-    Y = np.array(Y)[:100]
+    X = np.array(X)
+    Y = np.array(Y)
 
     print 'X shape: ',type(X),X.shape
     print 'Y shape: ',type(Y),Y.shape
 
     model = create_rnn_model(state)
-    #model = baseline_model()
 
+    #split data
     train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size=0.2)
+    
+    model.fit(train_x, train_y, nb_epoch=state['epoch'], batch_size=state['bs'])
+    scores = model.evaluate(test_x, test_y, batch_size=state['bs'])
 
-    model.fit(train_x, train_y, nb_epoch=1, batch_size=64)
-    scores = model.evaluate(test_x, test_y, batch_size=1)
-
+    #MSE
     print("%s: %.4f" % (model.metrics_names[1], scores[1]))
 
     #estimator = KerasRegressor(build_fn=model, nb_epoch=state['epoch'], batch_size=state['bs'], verbose=0)
