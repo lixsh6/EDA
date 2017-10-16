@@ -31,13 +31,17 @@ def parse_args():
 
 def main(args):
     state = eval(args.prototype)()
+    #X,Y are list
     (X,Y) = cPickle.load(open(state['dataSavePath']))
 
     seed = state['seed']
     np.random.seed(seed)
 
+    assert len(X) = len(Y)
+    
     X = np.array(X)
     Y = np.array(Y)
+
 
     print 'X shape: ',type(X),X.shape
     print 'Y shape: ',type(Y),Y.shape
@@ -47,7 +51,10 @@ def main(args):
     #split data
     train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size=0.2)
     
+    #training
     model.fit(train_x, train_y, nb_epoch=state['epoch'], batch_size=state['bs'])
+
+    #testing
     scores = model.evaluate(test_x, test_y, batch_size=state['bs'])
 
     #MSE
